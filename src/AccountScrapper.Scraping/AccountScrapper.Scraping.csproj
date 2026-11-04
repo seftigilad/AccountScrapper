@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Data collection: browser automation with PuppeteerSharp and the site-specific scrapers. -->
+  <ItemGroup>
+    <ProjectReference Include="..\AccountScrapper.Core\AccountScrapper.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="PuppeteerSharp" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="AccountScrapper.Tests" />
+  </ItemGroup>
+</Project>

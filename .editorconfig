@@ -1,0 +1,20 @@
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+insert_final_newline = true
+
+[*.cs]
+indent_size = 4
+
+# Source-generated LoggerMessage delegates pay off in hot paths; a run of this tool logs a dozen lines.
+dotnet_diagnostic.CA1848.severity = none
+dotnet_diagnostic.CA1873.severity = none
+
+[tests/**.cs]
+# Test names use Method_Scenario_Expectation.
+dotnet_diagnostic.CA1707.severity = none
+
+[*.{json,csproj,props}]
+indent_size = 2

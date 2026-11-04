@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Composition root: wires the layers together and runs the job. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>AccountScrapper</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AccountScrapper.Core\AccountScrapper.Core.csproj" />
+    <ProjectReference Include="..\AccountScrapper.Scraping\AccountScrapper.Scraping.csproj" />
+    <ProjectReference Include="..\AccountScrapper.Processing\AccountScrapper.Processing.csproj" />
+    <ProjectReference Include="..\AccountScrapper.Export\AccountScrapper.Export.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

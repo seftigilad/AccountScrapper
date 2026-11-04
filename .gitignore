@@ -1,0 +1,12 @@
+bin/
+obj/
+.vs/
+*.user
+
+# Scraper output contains personal financial data - never commit it.
+output/
+*.json.bak
+
+# Local secrets
+appsettings.*.local.json
+.env

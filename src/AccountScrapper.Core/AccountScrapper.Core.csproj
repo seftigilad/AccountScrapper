@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Domain models and contracts shared by all layers. No external dependencies. -->
+</Project>
