@@ -60,12 +60,23 @@ internal sealed class HapoalimLoginPage
     private async Task<LoginOutcome> WaitForLoginOutcomeAsync(CancellationToken cancellationToken)
     {
         var deadline = DateTime.UtcNow.AddSeconds(_options.LoginTimeoutSeconds);
+        string? lastPath = null;
         while (DateTime.UtcNow < deadline)
         {
-            var outcome = HapoalimSite.ClassifyLoginUrl(_page.Url);
+            var url = _page.Url;
+            var outcome = HapoalimSite.ClassifyLoginUrl(url);
             if (outcome != LoginOutcome.Pending)
             {
                 return outcome;
+            }
+
+            // Log each page the flow passes through, to diagnose an unrecognized landing page.
+            // Only the path is logged - the query string may carry identifying data.
+            var path = PathOnly(url);
+            if (path != lastPath)
+            {
+                _logger.LogInformation("Waiting for login to complete, current page: {Path}", path);
+                lastPath = path;
             }
 
             await Task.Delay(PollInterval, cancellationToken);
@@ -73,4 +84,7 @@ internal sealed class HapoalimLoginPage
 
         return LoginOutcome.Pending;
     }
+
+    private static string PathOnly(string url) =>
+        Uri.TryCreate(url, UriKind.Absolute, out var uri) ? uri.AbsolutePath : "(unknown)";
 }

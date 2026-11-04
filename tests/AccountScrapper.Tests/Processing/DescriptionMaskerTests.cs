@@ -16,6 +16,14 @@ public class DescriptionMaskerTests
     public void Partial_WorksForEnglishText() =>
         Assert.Equal("S********* P*******", Create(MaskingMode.Partial).Mask("Superpharm Purchase"));
 
+    [Theory]
+    [InlineData("אלקטרה בע\"מ", "א***** ב***")]
+    [InlineData("זיכוי מאוצה\"ח", "ז**** מ******")]
+    [InlineData("זיכוי מאוצה״ח", "ז**** מ******")]
+    [InlineData("\"ציטוט\"", "\"צ****\"")] // quotes around a word still act as boundaries
+    public void Partial_HebrewAbbreviationQuotesDoNotRevealTheNextLetter(string text, string expected) =>
+        Assert.Equal(expected, Create(MaskingMode.Partial).Mask(text));
+
     [Fact]
     public void Partial_NeverRevealsADigit()
     {

@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Unicode;
 using AccountScrapper.Core.Abstractions;
 using AccountScrapper.Core.Models;
 using Microsoft.Extensions.Options;
@@ -16,8 +15,9 @@ public sealed class JsonTransactionExporter : ITransactionExporter
         WriteIndented = true,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 
-        // Keep Hebrew readable in the file instead of \uXXXX escapes.
-        Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+        // Keep Hebrew and quotes (בע"מ) readable instead of \uXXXX escapes. The "unsafe" part only concerns
+        // embedding the JSON inside HTML, which this file is never used for.
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
 
     private readonly ExportOptions _options;

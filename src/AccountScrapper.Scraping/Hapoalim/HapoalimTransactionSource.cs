@@ -84,7 +84,9 @@ public sealed class HapoalimTransactionSource : ITransactionSource
         var open = accounts.Where(a => a.IsOpen).ToList();
         if (open.Count > 1)
         {
-            _logger.LogWarning("Several open accounts found; using the first. Set Hapoalim:AccountId to choose another");
+            _logger.LogWarning(
+                "Several open accounts found ({Accounts}); using the first. Set Hapoalim:AccountId to choose another",
+                string.Join(", ", open.Select(a => a.MaskedId)));
         }
 
         return open.FirstOrDefault() ?? throw new ScrapingException("No open current account was found.");

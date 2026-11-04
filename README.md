@@ -11,13 +11,19 @@ Requires the .NET 10 SDK. On the first run PuppeteerSharp downloads a matching C
 dotnet run --project src/AccountScrapper.App
 ```
 
-You are prompted for the user code and password (the password is hidden as you type). For unattended runs, set them
-as environment variables instead:
+The app looks for your login in this order:
 
-```powershell
-$env:ACCOUNTSCRAPPER_USERCODE = "..."
-$env:ACCOUNTSCRAPPER_PASSWORD = "..."
-```
+1. **User Secrets.** Stored in your Windows profile (`%APPDATA%\Microsoft\UserSecrets\`), outside the repository,
+   so they can't be committed by accident:
+   ```powershell
+   dotnet user-secrets set "Credentials:UserCode" "..." --project src/AccountScrapper.App
+   dotnet user-secrets set "Credentials:Password" "..." --project src/AccountScrapper.App
+   # remove them later with: dotnet user-secrets clear --project src/AccountScrapper.App
+   ```
+2. **Environment variables:** `ACCOUNTSCRAPPER_USERCODE` and `ACCOUNTSCRAPPER_PASSWORD`.
+3. **A prompt** when you run the app. The password is hidden as you type.
+
+Never put credentials in `appsettings.json`. That file is part of the repository.
 
 Output goes to `output/transactions_<yyyy-MM>.json`:
 

@@ -16,4 +16,15 @@ internal sealed class HapoalimAccountDto
 
     /// <summary>The identifier the transactions endpoint expects: "bank-branch-account".</summary>
     public string Id => $"{BankNumber}-{BranchNumber}-{AccountNumber}";
+
+    /// <summary>Safe for logs: only the last 3 digits of the account number, e.g. "12-***-***901".</summary>
+    public string MaskedId
+    {
+        get
+        {
+            var number = AccountNumber.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var visible = number.Length > 3 ? number[^3..] : number;
+            return $"{BankNumber}-***-{new string('*', number.Length - visible.Length)}{visible}";
+        }
+    }
 }

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <AssemblyName>AccountScrapper</AssemblyName>
+    <UserSecretsId>accountscrapper-6f1c2b7e-3d4a-4e9b-9c1a-2f8e5d7b0a11</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\AccountScrapper.Core\AccountScrapper.Core.csproj" />

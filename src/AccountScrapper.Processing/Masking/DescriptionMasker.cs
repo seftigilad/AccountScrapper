@@ -42,8 +42,9 @@ public sealed class DescriptionMasker : IDescriptionMasker
         var result = new StringBuilder(text.Length);
         var atWordStart = true;
 
-        foreach (var c in text)
+        for (var i = 0; i < text.Length; i++)
         {
+            var c = text[i];
             if (char.IsDigit(c))
             {
                 // Numbers are the most sensitive part (accounts, cards, references) - never reveal a digit.
@@ -55,6 +56,12 @@ public sealed class DescriptionMasker : IDescriptionMasker
                 result.Append(atWordStart ? c : MaskChar);
                 atWordStart = false;
             }
+            else if (IsInWordMark(c) && !atWordStart && i + 1 < text.Length && char.IsLetter(text[i + 1]))
+            {
+                // Hebrew abbreviations put quotes inside a word (בע"מ, מאוצה"ח, ח'): mask the mark too and
+                // stay in the same word, otherwise the letter after it would be revealed.
+                result.Append(MaskChar);
+            }
             else
             {
                 // Whitespace and punctuation are kept and mark the start of a new word.
@@ -65,4 +72,6 @@ public sealed class DescriptionMasker : IDescriptionMasker
 
         return result.ToString();
     }
+
+    private static bool IsInWordMark(char c) => c is '"' or '\'' or '״' or '׳';
 }

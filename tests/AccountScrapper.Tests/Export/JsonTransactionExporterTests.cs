@@ -24,14 +24,14 @@ public sealed class JsonTransactionExporterTests : IDisposable
         var exporter = new JsonTransactionExporter(Options.Create(new ExportOptions { OutputDirectory = _directory }));
         var report = new TransactionReport(
             new DateRange(new DateOnly(2026, 10, 1), new DateOnly(2026, 10, 31)),
-            [new Transaction(new DateOnly(2026, 10, 3), -1200.50m, "ש** ד****")],
+            [new Transaction(new DateOnly(2026, 10, 3), -1200.50m, "ש** ד**** בע\"מ")],
             new DateTimeOffset(2026, 11, 4, 9, 0, 0, TimeSpan.Zero));
 
         var path = await exporter.ExportAsync(report);
 
         Assert.Equal(Path.Combine(_directory, "transactions_2026-10.json"), path);
         var text = await File.ReadAllTextAsync(path);
-        Assert.Contains("ש** ד****", text); // Hebrew is written as-is, not \u-escaped
+        Assert.Contains("ש** ד**** בע\\\"מ", text); // Hebrew written as-is, quote as \" rather than "
 
         using var json = JsonDocument.Parse(text);
         var root = json.RootElement;
@@ -42,7 +42,7 @@ public sealed class JsonTransactionExporterTests : IDisposable
         var transaction = root.GetProperty("transactions")[0];
         Assert.Equal("2026-10-03", transaction.GetProperty("date").GetString());
         Assert.Equal(-1200.50m, transaction.GetProperty("amount").GetDecimal());
-        Assert.Equal("ש** ד****", transaction.GetProperty("description").GetString());
+        Assert.Equal("ש** ד**** בע\"מ", transaction.GetProperty("description").GetString());
     }
 
     [Fact]

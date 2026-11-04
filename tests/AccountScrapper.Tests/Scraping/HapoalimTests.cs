@@ -51,4 +51,8 @@ public class HapoalimTests
     [Fact]
     public void AccountDto_BuildsIdInTheFormatTheApiExpects() =>
         Assert.Equal("12-345-678901", new HapoalimAccountDto { BankNumber = 12, BranchNumber = 345, AccountNumber = 678901 }.Id);
+
+    [Fact]
+    public void AccountDto_MaskedId_RevealsOnlyLastThreeDigits() =>
+        Assert.Equal("12-***-***901", new HapoalimAccountDto { BankNumber = 12, BranchNumber = 345, AccountNumber = 678901 }.MaskedId);
 }

@@ -6,6 +6,7 @@ using AccountScrapper.Core.Exceptions;
 using AccountScrapper.Export;
 using AccountScrapper.Processing;
 using AccountScrapper.Scraping;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -18,13 +19,17 @@ var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings
     ContentRootPath = AppContext.BaseDirectory, // find appsettings.json regardless of the working directory
 });
 
+// Loaded in every environment (not only Development) so credentials can be kept outside the repository.
+// Stored under %APPDATA%\Microsoft\UserSecrets - see README.
+builder.Configuration.AddUserSecrets<Program>(optional: true);
+
 builder.Services
     .AddHapoalimScraper(builder.Configuration)       // collect
     .AddTransactionProcessing(builder.Configuration) // process
     .AddJsonExport(builder.Configuration);           // save
 
 builder.Services.AddSingleton(TimeProvider.System);
-builder.Services.AddSingleton<ICredentialsProvider, EnvironmentOrConsoleCredentialsProvider>();
+builder.Services.AddSingleton<ICredentialsProvider, ConfiguredOrConsoleCredentialsProvider>();
 builder.Services.AddSingleton<ScrapeJob>();
 
 using var host = builder.Build();
